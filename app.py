@@ -10,7 +10,7 @@ def get_connection():
     return pymysql.connect(
         host='127.0.0.1',
         user='root',
-        password='',  # <--- ŞİFRENİ BURAYA YAZ
+        password='BURAYA_MYSQL_SIFRENİ_YAZ',  # <--- ŞİFRENİ BURAYA YAZ
         database='gts_db',
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
@@ -41,7 +41,7 @@ def get_data():
         return pd.DataFrame()
 
 # --- ARAYÜZ ---
-st.title("🎓 Graduate Thesis System")
+st.title("🎓 Graduate Thesis System (MySQL Versiyonu)")
 st.markdown("---")
 
 df = get_data()
@@ -52,25 +52,25 @@ if not df.empty:
     
     # Yıl Filtresi
     years = sorted(df['Yıl'].unique())
-    selected_year = st.sidebar.multiselect("Yıl", years, default=years)
+    selected_year = st.sidebar.multiselect("Yıl Seçiniz", years, default=years)
     
     # Dil Filtresi
     langs = sorted(df['Dil'].astype(str).unique())
-    selected_lang = st.sidebar.multiselect("Dil", langs, default=langs)
+    selected_lang = st.sidebar.multiselect("Dil Seçiniz", langs, default=langs)
 
     # Filtreleme Mantığı
     mask = (df['Yıl'].isin(selected_year)) & (df['Dil'].isin(selected_lang))
     df_filtered = df[mask]
 
     # Arama Çubuğu
-    search_term = st.text_input("🔎 Arama (Başlık veya Yazar):")
+    search_term = st.text_input("🔎 Arama (Başlık veya Yazar):", placeholder="Örn: Yapay Zeka...")
     if search_term:
         df_filtered = df_filtered[
             df_filtered['Başlık'].str.contains(search_term, case=False) | 
             df_filtered['Yazar'].str.contains(search_term, case=False)
         ]
 
-    st.write(f"Toplam **{len(df_filtered)}** tez bulundu.")
+    st.success(f"Toplam **{len(df_filtered)}** tez listeleniyor.")
     st.dataframe(df_filtered, use_container_width=True)
 
 else:
