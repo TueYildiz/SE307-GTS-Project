@@ -1,10 +1,20 @@
 #!/usr/bin/env python
+"""Django's command-line utility for administrative tasks."""
 import os
 import sys
 
+# --- BU KISMI GÜNCELLE ---
+import pymysql
+pymysql.install_as_MySQLdb()
+
+# Django'yu kandıran kod:
+import MySQLdb
+if MySQLdb.version_info < (2, 2, 2):
+    MySQLdb.version_info = (2, 2, 2, 'final', 0)
+# -------------------------
+
 def main():
     """Run administrative tasks."""
-    
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gts.settings')
     try:
         from django.core.management import execute_from_command_line
